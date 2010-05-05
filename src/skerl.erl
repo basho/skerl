@@ -1,8 +1,8 @@
 -module(skerl).
 
 -export([init/2,
-		 update/3,
-		 final/2,
+         update/3,
+         final/2,
          hash/3]).
 
 -on_load(init/0).
@@ -21,14 +21,14 @@ init() ->
     erlang:load_nif(SoName, 0).
 
 init(Ref, Bits) ->
-	"NIF library not loaded".
+    "NIF library not loaded".
 
 update(Ref, State, Data) ->
-	"NIF library not loaded".
+    "NIF library not loaded".
 
 final(Ref, State) ->
-	"NIF library not loaded".
-	
+    "NIF library not loaded".
+    
 hash(Ref, Bits, Data) ->
     "NIF library not loaded".
 

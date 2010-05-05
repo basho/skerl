@@ -26,73 +26,73 @@ static ErlNifFunc nif_funcs[] =
 
 
 ERL_NIF_TERM skein_init(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
-{	
-	int bits = 0;
-	enif_get_int(env, argv[0], &bits);
-	
-	hashState *state = enif_alloc_resource(env, skein_hashstate, sizeof(hashState));
-	HashReturn r = Init(state, bits);
-	if (r == SUCCESS) {
-		ERL_NIF_TERM result = enif_make_resource(env, state);
-	    enif_release_resource(env, state);
-	    return enif_make_tuple2(env, enif_make_atom(env, "ok"), state);
-	} else {
-		return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, r));
-	}
+{   
+    int bits = 0;
+    enif_get_int(env, argv[0], &bits);
+    
+    hashState *state = enif_alloc_resource(env, skein_hashstate, sizeof(hashState));
+    HashReturn r = Init(state, bits);
+    if (r == SUCCESS) {
+        ERL_NIF_TERM result = enif_make_resource(env, state);
+        enif_release_resource(env, state);
+        return enif_make_tuple2(env, enif_make_atom(env, "ok"), state);
+    } else {
+        return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, r));
+    }
 }
 
 ERL_NIF_TERM skein_update(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
-	hashState *state = NULL;
-	enif_get_resource(env, argv[0], skein_hashstate, (void**)&state);
+    hashState *state = NULL;
+    enif_get_resource(env, argv[0], skein_hashstate, (void**)&state);
 
-	ErlNifBinary bin;
-	enif_inspect_binary(env, argv[1], &bin);
-	
-	HashReturn r = Update(state, bin.data, bin.size * 8);
-	if (r == SUCCESS) {
-	    enif_release_resource(env, state);
-	    return enif_make_tuple2(env, enif_make_atom(env, "ok"), state);
-	} else {
-		return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, r));
-	}
+    ErlNifBinary bin;
+    enif_inspect_binary(env, argv[1], &bin);
+    
+    HashReturn r = Update(state, bin.data, bin.size * 8);
+    if (r == SUCCESS) {
+        enif_release_resource(env, state);
+        return enif_make_tuple2(env, enif_make_atom(env, "ok"), state);
+    } else {
+        return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, r));
+    }
 }
 
 ERL_NIF_TERM skein_final(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
-	hashState *state = NULL;
-	enif_get_resource(env, argv[0], skein_hashstate, (void**)&state);
-	
-	BitSequence *hash = enif_alloc_resource(env, skein_hashval, sizeof(state->statebits / 8));
-	HashReturn r = Final(state, hash);
-	if (r == SUCCESS) {
-		ERL_NIF_TERM result = enif_make_resource(env, hash);
-	    enif_release_resource(env, hash);
-	    return enif_make_tuple2(env, enif_make_atom(env, "ok"), hash);
-	} else {
-		free(hash);
-		return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, r));
-	}
+    hashState *state = NULL;
+    enif_get_resource(env, argv[0], skein_hashstate, (void**)&state);
+    
+    BitSequence *hash = enif_alloc_resource(env, skein_hashval, sizeof(state->statebits / 8));
+    HashReturn r = Final(state, hash);
+    if (r == SUCCESS) {
+        ERL_NIF_TERM result = enif_make_resource(env, hash);
+        enif_release_resource(env, hash);
+        return enif_make_tuple2(env, enif_make_atom(env, "ok"), hash);
+    } else {
+        free(hash);
+        return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, r));
+    }
 }
 
 ERL_NIF_TERM skein_hash(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
-	int bits = 0;
-	enif_get_int(env, argv[0], &bits);
-	
-	ErlNifBinary bin;
-	enif_inspect_binary(env, argv[1], &bin);
-	
-	BitSequence *hash = enif_alloc_resource(env, skein_hashval, sizeof(bits / 8));
-	HashReturn r = Hash(bits, (BitSequence *)(bin.data), bin.size * 8, hash);
-	if (r == SUCCESS) {
-		ERL_NIF_TERM result = enif_make_resource(env, hash);
-	    enif_release_resource(env, hash);
-	    return enif_make_tuple2(env, enif_make_atom(env, "ok"), hash);
-	} else {
-		free(hash);
-		return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, r));
-	}	
+    int bits = 0;
+    enif_get_int(env, argv[0], &bits);
+    
+    ErlNifBinary bin;
+    enif_inspect_binary(env, argv[1], &bin);
+    
+    BitSequence *hash = enif_alloc_resource(env, skein_hashval, sizeof(bits / 8));
+    HashReturn r = Hash(bits, (BitSequence *)(bin.data), bin.size * 8, hash);
+    if (r == SUCCESS) {
+        ERL_NIF_TERM result = enif_make_resource(env, hash);
+        enif_release_resource(env, hash);
+        return enif_make_tuple2(env, enif_make_atom(env, "ok"), hash);
+    } else {
+        free(hash);
+        return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, r));
+    }   
 }
 
 static void skein_resource_cleanup(ErlNifEnv* env, void* arg)

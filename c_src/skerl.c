@@ -37,7 +37,7 @@ ERL_NIF_TERM skein_init(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
         enif_release_resource(env, state);
         return enif_make_tuple2(env, enif_make_atom(env, "ok"), state);
     } else {
-		enif_release_resource(env, state);
+        enif_release_resource(env, state);
         return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, r));
     }
 }
@@ -55,7 +55,7 @@ ERL_NIF_TERM skein_update(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
         enif_release_resource(env, state);
         return enif_make_tuple2(env, enif_make_atom(env, "ok"), state);
     } else {
-	    enif_release_resource(env, state);
+        enif_release_resource(env, state);
         return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, r));
     }
 }

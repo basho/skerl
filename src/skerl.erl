@@ -1,9 +1,11 @@
 -module(skerl).
+-author('b@fastip.com').
 
--export([init/2,
-         update/3,
-         final/2,
-         hash/3]).
+-export([init/0,
+         init/1,
+         update/2,
+         final/1,
+         hash/2]).
 
 -on_load(init/0).
 
@@ -14,22 +16,22 @@
 init() ->
     case code:priv_dir(skerl) of
         {error, bad_name} ->
-            SoName = filename:join("../priv", skerl);
+            SoName = filename:join("../priv", skerl_nifs);
         Dir ->
-            SoName = filename:join(Dir, skerl)
+            SoName = filename:join(Dir, skerl_nifs)
     end,
     erlang:load_nif(SoName, 0).
 
-init(Ref, Bits) ->
+init(Bits) ->
     "NIF library not loaded".
 
-update(Ref, State, Data) ->
+update(State, Data) ->
     "NIF library not loaded".
 
-final(Ref, State) ->
+final(State) ->
     "NIF library not loaded".
     
-hash(Ref, Bits, Data) ->
+hash(Bits, Data) ->
     "NIF library not loaded".
 
 %% ===================================================================

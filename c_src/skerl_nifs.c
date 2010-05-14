@@ -2,7 +2,6 @@
 #include "erl_nif.h"
 #include "skein_api.h"
 
-static ErlNifResourceType* skein_RESOURCE;
 static ErlNifResourceType* skein_hashstate;
 static ErlNifResourceType* skein_hashval;
 
@@ -24,12 +23,15 @@ static ErlNifFunc nif_funcs[] =
     {"hash", 2, skein_hash}
 };
 	
-static char *hash_return_strings[] = {"success", "fail", "bad hashlen"};
+ERL_NIF_INIT(skerl, nif_funcs, NULL, NULL, NULL, NULL);
+	
+static char *hash_return_strings[] = {"success", "fail", "bad_hashlen"};
 
 ERL_NIF_TERM skein_init(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {   
     int bits = 0;
-    enif_get_int(env, argv[0], &bits);
+    if(!enif_get_int(env, argv[0], &bits))
+		return enif_make_badarg(env);
     
     hashState *state = enif_alloc_resource(env, skein_hashstate, sizeof(hashState));
     HashReturn r = Init(state, bits);
@@ -39,7 +41,7 @@ ERL_NIF_TERM skein_init(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
         return enif_make_tuple2(env, enif_make_atom(env, "ok"), state);
     } else {
         enif_release_resource(env, state);
-        return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, hash_return_strings[r]));
+        return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, "fail"));
     }
 }
 
@@ -97,20 +99,3 @@ ERL_NIF_TERM skein_hash(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
         return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, hash_return_strings[r]));
     }   
 }
-
-static void skein_resource_cleanup(ErlNifEnv* env, void* arg)
-{
-    // Delete any dynamically allocated memory stored in skein_handle
-    // skein_handle* handle = (skein_handle*)arg;
-}
-
-static int on_load(ErlNifEnv* env, void** priv_data, ERL_NIF_TERM load_info)
-{
-    skein_RESOURCE = enif_open_resource_type(env, "skein_resource",
-                                                  &skein_resource_cleanup,
-                                                  ERL_NIF_RT_CREATE | ERL_NIF_RT_TAKEOVER,
-                                                  0);
-    return 0;
-}
-
-ERL_NIF_INIT(skein, nif_funcs, &on_load, NULL, NULL, NULL);

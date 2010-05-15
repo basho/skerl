@@ -1,6 +1,7 @@
 
 #include "erl_nif.h"
 #include "skein_api.h"
+#include <stdio.h>
 
 static ErlNifResourceType* skein_hashstate;
 
@@ -30,7 +31,7 @@ static char *hash_return_strings[] = {"success", "fail", "bad_hashlen"};
 
 int load(ErlNifEnv* env, void ** priv_data, ERL_NIF_TERM load_info)
 {
-  skein_hashstate = enif_open_resource_type(env, "hashstate", enif_free, ERL_NIF_RT_CREATE, NULL);
+  skein_hashstate = enif_open_resource_type(env, "hashstate", NULL, ERL_NIF_RT_CREATE, NULL);
   return 0;
 }
 
@@ -57,7 +58,6 @@ ERL_NIF_TERM skein_update(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
     hashState *state = NULL;
     enif_get_resource(env, argv[0], skein_hashstate, (void**)&state);
-
     ErlNifBinary bin;
     enif_inspect_binary(env, argv[1], &bin);
     

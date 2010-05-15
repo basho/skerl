@@ -21,3 +21,15 @@ fivetwelve_bit_input_test() ->
       "E0DFDEDDDCDBDAD9D8D7D6D5D4D3D2D1D0CFCECDCCCBCAC" ++
       "9C8C7C6C5C4C3C2C1C0"))).
       
+streaming_input_test() ->
+  {ok, S} = skerl:init(512),
+  {ok, _} = skerl:update(S, hex:hexstr_to_bin("FFFEFDFCFBFAF9F8")),
+  {ok, _} = skerl:update(S, hex:hexstr_to_bin("F7F6F5F4F3F2F1F0EFEEEDECEBEAE9E8E7E6E5E4E3E2E1")),
+  {ok, _} = skerl:update(S, hex:hexstr_to_bin("E0DFDEDDDCDBDAD9D8D7D6D5D4D3D2D1D0CFCECDCCCBCAC9")),
+  {ok, _} = skerl:update(S, hex:hexstr_to_bin("C8C7C6C5C4C3C2C1C0")),
+  ?assertEqual(
+    {ok, hex:hexstr_to_bin("04F96C6F61B3E237A4FA7755EE" ++
+      "4ACF34494222968954F495AD147A1A715F7A73EBECFA1EF" ++
+      "275BED87DC60BD1A0BC602106FA98F8E7237BD1AC0958E7" ++
+      "6D306678")},
+    skerl:final(S)).

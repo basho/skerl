@@ -34,13 +34,3 @@ final(State) ->
 hash(Bits, Data) ->
     "NIF library not loaded".
 
-%% ===================================================================
-%% EUnit tests
-%% ===================================================================
--ifdef(TEST).
-
-basic_test() ->
-    {ok, Ref} = new(),
-    ok = init(Ref).
-
--endif.

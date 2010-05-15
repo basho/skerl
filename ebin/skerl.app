@@ -3,7 +3,8 @@
   {description, "Skein hash function NIF"},
   {vsn, "0.1"},
   {modules, [
-             skerl
+             skerl,
+             hex
             ]},
   {registered, []},
   {applications, [

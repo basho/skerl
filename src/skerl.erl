@@ -5,7 +5,8 @@
          init/1,
          update/2,
          final/1,
-         hash/2]).
+         hash/2,
+         hexhash/2]).
 
 -on_load(init/0).
 
@@ -22,15 +23,18 @@ init() ->
     end,
     erlang:load_nif(SoName, 0).
 
-init(Bits) ->
+init(_Bits) ->
     "NIF library not loaded".
 
-update(State, Data) ->
+update(_State, _Data) ->
     "NIF library not loaded".
 
-final(State) ->
+final(_State) ->
     "NIF library not loaded".
     
-hash(Bits, Data) ->
-    "NIF library not loaded".
-
+hexhash(Bits, Data) ->
+  {ok, Hash} = hash(Bits, Data),
+  list_to_binary(hex:bin_to_hexstr(Hash)).
+    
+hash(_Bits, Data) ->
+  "NIF library not loaded".

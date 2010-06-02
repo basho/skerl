@@ -36,5 +36,5 @@ hexhash(Bits, Data) ->
   {ok, Hash} = hash(Bits, Data),
   list_to_binary(hex:bin_to_hexstr(Hash)).
     
-hash(_Bits, Data) ->
+hash(_Bits, _Data) ->
   "NIF library not loaded".

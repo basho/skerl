@@ -24,9 +24,9 @@ static ErlNifFunc nif_funcs[] =
     {"final", 1, skein_final},
     {"hash", 2, skein_hash}
 };
-	
+
 ERL_NIF_INIT(skerl, nif_funcs, load, NULL, NULL, NULL);
-	
+
 static char *hash_return_strings[] = {"success", "fail", "bad_hashlen"};
 
 int load(ErlNifEnv* env, void ** priv_data, ERL_NIF_TERM load_info)
@@ -40,7 +40,7 @@ ERL_NIF_TERM skein_init(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
   ERL_NIF_TERM hash_state_term;
     int bits = 0;
     if(!enif_get_int(env, argv[0], &bits))
-		return enif_make_badarg(env);
+        return enif_make_badarg(env);
     
     hashState *state = (hashState*) enif_alloc_resource(env, skein_hashstate, sizeof(hashState));
     HashReturn r = Init(state, bits);

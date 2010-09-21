@@ -30,6 +30,8 @@
  Issue 20/10/2006
 */
 
+/* modified by justin@basho.com to include Solaris endianness test */
+
 #ifndef BRG_ENDIAN_H
 #define BRG_ENDIAN_H
 
@@ -42,6 +44,12 @@
 #elif defined( BSD ) && ( BSD >= 199103 ) || defined( __APPLE__ ) || \
       defined( __CYGWIN32__ ) || defined( __DJGPP__ ) || defined( __osf__ )
 #  include <machine/endian.h>
+#elif defined (__SVR4) && defined (__sun)
+#  ifdef __sparc__
+#    define BYTE_ORDER IS_BIG_ENDIAN
+#  else
+#    define BYTE_ORDER IS_LITTLE_ENDIAN
+#  endif
 #elif defined( __linux__ ) || defined( __GNUC__ ) || defined( __GNU_LIBRARY__ )
 #  if !defined( __MINGW32__ ) && !defined(AVR)
 #    include <endian.h>

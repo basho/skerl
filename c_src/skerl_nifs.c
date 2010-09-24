@@ -1,5 +1,6 @@
 
 #include "erl_nif.h"
+#include "erl_nif_compat.h"
 #include "skein_api.h"
 #include <stdio.h>
 
@@ -31,7 +32,7 @@ static char *hash_return_strings[] = {"success", "fail", "bad_hashlen"};
 
 int load(ErlNifEnv* env, void ** priv_data, ERL_NIF_TERM load_info)
 {
-  skein_hashstate = enif_open_resource_type(env, "hashstate", NULL, ERL_NIF_RT_CREATE, NULL);
+  skein_hashstate = enif_open_resource_type_compat(env, "hashstate", NULL, ERL_NIF_RT_CREATE, NULL);
   return 0;
 }
 
@@ -42,14 +43,14 @@ ERL_NIF_TERM skein_init(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
     if(!enif_get_int(env, argv[0], &bits))
         return enif_make_badarg(env);
     
-    hashState *state = (hashState*) enif_alloc_resource(env, skein_hashstate, sizeof(hashState));
+    hashState *state = (hashState*) enif_alloc_resource_compat(env, skein_hashstate, sizeof(hashState));
     HashReturn r = Init(state, bits);
     if (r == SUCCESS) {
         hash_state_term = enif_make_resource(env, state);
-        enif_release_resource(env, state);
+        enif_release_resource_compat(env, state);
         return enif_make_tuple2(env, enif_make_atom(env, "ok"), hash_state_term);
     } else {
-        enif_release_resource(env, state);
+        enif_release_resource_compat(env, state);
         return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, "fail"));
     }
 }
@@ -75,7 +76,7 @@ ERL_NIF_TERM skein_final(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
     enif_get_resource(env, argv[0], skein_hashstate, (void**)&state);
     
     ErlNifBinary out;
-    enif_alloc_binary(env, (size_t)(state->statebits/8), &out);
+    enif_alloc_binary_compat(env, (size_t)(state->statebits/8), &out);
     
     HashReturn r = Final(state, (BitSequence *)out.data);
     if (r == SUCCESS) {
@@ -92,7 +93,7 @@ ERL_NIF_TERM skein_hash(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
     
     ErlNifBinary bin, out;
     enif_inspect_binary(env, argv[1], &bin);
-    enif_alloc_binary(env, (size_t)(bits/8), &out);
+    enif_alloc_binary_compat(env, (size_t)(bits/8), &out);
     
     HashReturn r = Hash(bits, (BitSequence *)(bin.data), bin.size * 8, (BitSequence *)out.data);
     if (r == SUCCESS) {

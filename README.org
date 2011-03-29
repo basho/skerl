@@ -48,24 +48,23 @@ erl
 The underlying hashing code in Skerl is the reference implementation
 of Skein from the official NIST submission.
 
-Skein is a finalist candidate in the NIST competition to become SHA-3.
-http://csrc.nist.gov/groups/ST/hash/sha-3/Round3/submissions_rnd3.html
+Skein is a [
+[http://csrc.nist.gov/groups/ST/hash/sha-3/Round3/submissions_rnd3.html]
+[finalist candidate in the NIST competition to become SHA-3]].
 
 It is a hash function designed by 
 Niels Ferguson, Stefan Lucks, Bruce Schneier, Doug Whiting, Mihir
 Bellare, Tadayoshi Kohno, Jon Callas, and Jesse Walker.
 
 Details on the algorithm as submitted and known analysis can be found
-at ecrypt:
-http://ehash.iaik.tugraz.at/wiki/Skein
+at [[http://ehash.iaik.tugraz.at/wiki/Skein][ecrypt]].
 
-A full paper on Skein by the authors can be found at:
-http://www.schneier.com/skein1.3.pdf
+A [[http://www.schneier.com/skein1.3.pdf][full paper on Skein]]
+by the designers has been published.
 
-The official Skein page (http://www.skein-hash.info/) uses the headline:
+The [[http://www.skein-hash.info/][official Skein page]] uses the headline:
 
 Fast, Secure, Simple, Flexible, Efficient. And it rhymes with "rain."
-
 
 ** Contributing
    We encourage contributions to =skerl= from the community.

@@ -17,9 +17,9 @@
 init() ->
     case code:priv_dir(skerl) of
         {error, bad_name} ->
-            SoName = filename:join("../priv", skerl_nifs);
+            SoName = filename:join("../priv", "skerl_nifs");
         Dir ->
-            SoName = filename:join(Dir, skerl_nifs)
+            SoName = filename:join(Dir, "skerl_nifs")
     end,
     erlang:load_nif(SoName, 0).
 
@@ -35,6 +35,12 @@ final(_State) ->
 hexhash(Bits, Data) ->
   {ok, Hash} = hash(Bits, Data),
   list_to_binary(hex:bin_to_hexstr(Hash)).
-    
+
+-spec hash(non_neg_integer(), binary()) -> {ok, binary()} | {error, atom()}.
 hash(_Bits, _Data) ->
-  "NIF library not loaded".
+    case random:uniform(999999999999) of
+        666 -> {error, fail};
+        667 -> {error, bad_hashlen};
+        668 -> {ok, <<4242/integer>>};
+        _ -> exit("NIF library not loaded")
+    end.
